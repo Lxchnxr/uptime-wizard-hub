@@ -25,11 +25,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#06B6D4",
+          DEFAULT: "#9b87f5",
           foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#1E293B",
+          DEFAULT: "#1A1F2C",
           foreground: "#ffffff",
         },
         destructive: {
@@ -41,8 +41,8 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#D6BCFA",
+          foreground: "#1A1F2C",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
