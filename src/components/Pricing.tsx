@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const tiers = [
   {
@@ -93,6 +94,32 @@ const featureComparison = {
   },
 };
 
+// Neue Vergleichstabelle Daten
+const detailedComparison = {
+  "Monitoring Features": {
+    "Uptime Monitoring": ["✓", "✓", "✓"],
+    "SSL Monitoring": ["✓", "✓", "✓"],
+    "Performance Monitoring": ["Basis", "Erweitert", "Enterprise"],
+    "Custom Checks": ["2", "10", "Unbegrenzt"],
+    "API Monitoring": ["✗", "✓", "✓"],
+    "Transaction Monitoring": ["✗", "✓", "✓"],
+  },
+  "Benachrichtigungen": {
+    "Email": ["✓", "✓", "✓"],
+    "SMS": ["✗", "✓", "✓"],
+    "Slack": ["✗", "✓", "✓"],
+    "Custom Webhooks": ["✗", "✓", "✓"],
+    "PagerDuty": ["✗", "✓", "✓"],
+  },
+  "Support & Service": {
+    "Email Support": ["✓", "✓", "✓"],
+    "Chat Support": ["✗", "✓", "✓"],
+    "Phone Support": ["✗", "✗", "✓"],
+    "Dedicated Manager": ["✗", "✗", "✓"],
+    "SLA": ["✗", "99.9%", "99.99%"],
+  }
+};
+
 export const Pricing = () => {
   return (
     <div className="py-24 sm:py-32">
@@ -125,6 +152,11 @@ export const Pricing = () => {
                 </div>
                 <p className="mt-4 text-sm leading-6 text-gray-600">{tier.description}</p>
                 
+                {/* Trial Version Badge */}
+                <div className="mt-4">
+                  <Badge variant="outline" className="bg-primary/10">14 Tage kostenlos testen</Badge>
+                </div>
+
                 {/* USPs */}
                 <div className="mt-4 space-y-2">
                   {tier.usps?.map((usp) => (
@@ -143,87 +175,80 @@ export const Pricing = () => {
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="space-y-4">
                 <Button 
                   className="w-full" 
                   variant={tier.popular ? "default" : "outline"}
                 >
-                  Jetzt starten
+                  Jetzt kostenlos testen
                 </Button>
+                {tier.name === "Enterprise" && (
+                  <Button variant="outline" className="w-full">
+                    Sales kontaktieren
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}
         </div>
 
-        {/* Feature Comparison */}
+        {/* Detailed Feature Comparison Table */}
         <div className="mt-24">
           <h3 className="text-2xl font-bold text-center mb-8">Detaillierter Feature-Vergleich</h3>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-4 px-6">Feature</th>
-                  {tiers.map((tier) => (
-                    <th key={tier.name} className="text-left py-4 px-6">{tier.name}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(featureComparison).map(([feature, values]) => (
-                  <tr key={feature} className="border-b">
-                    <td className="py-4 px-6 font-medium">{feature}</td>
-                    <td className="py-4 px-6">{values.Starter}</td>
-                    <td className="py-4 px-6">{values.Professional}</td>
-                    <td className="py-4 px-6">{values.Enterprise}</td>
-                  </tr>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[300px]">Feature</TableHead>
+                  <TableHead>Starter</TableHead>
+                  <TableHead>Professional</TableHead>
+                  <TableHead>Enterprise</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Object.entries(detailedComparison).map(([category, features]) => (
+                  <React.Fragment key={category}>
+                    <TableRow>
+                      <TableCell colSpan={4} className="bg-muted/50 font-bold">
+                        {category}
+                      </TableCell>
+                    </TableRow>
+                    {Object.entries(features).map(([feature, values]) => (
+                      <TableRow key={feature}>
+                        <TableCell className="font-medium">{feature}</TableCell>
+                        {values.map((value, index) => (
+                          <TableCell 
+                            key={index}
+                            className={value === "✓" ? "text-primary font-bold" : ""}
+                          >
+                            {value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </React.Fragment>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
-        {/* Industry Comparison */}
-        <div className="mt-24">
-          <h3 className="text-2xl font-bold text-center mb-8">Branchenlösungen</h3>
-          <Tabs defaultValue={industries[0].name} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              {industries.map((industry) => (
-                <TabsTrigger key={industry.name} value={industry.name}>
-                  {industry.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {industries.map((industry) => (
-              <TabsContent key={industry.name} value={industry.name}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{industry.description}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {industry.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-2">
-                          <Check className="h-5 w-5 text-primary" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
-
-        {/* Call-to-Action */}
-        <div className="mt-24 text-center">
-          <h3 className="text-2xl font-bold mb-4">Bereit loszulegen?</h3>
-          <p className="text-gray-600 mb-8">
-            Starten Sie noch heute mit unserem kostenlosen 14-tägigen Testzeitraum
+        {/* Call-to-Action Section */}
+        <div className="mt-24 text-center bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-2xl p-8">
+          <h3 className="text-2xl font-bold mb-4">Bereit für den nächsten Schritt?</h3>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Starten Sie mit einer kostenlosen 14-tägigen Testversion oder lassen Sie sich von unserem Team beraten.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Button size="lg">Kostenlos testen</Button>
-            <Button variant="outline" size="lg">Demo vereinbaren</Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="default">
+              14 Tage kostenlos testen
+            </Button>
+            <Button size="lg" variant="outline">
+              Demo-Termin buchen
+            </Button>
+            <Button size="lg" variant="outline">
+              Sales kontaktieren
+            </Button>
           </div>
         </div>
       </div>
